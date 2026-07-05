@@ -1,4 +1,12 @@
-import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, filter, startWith, switchMap } from 'rxjs';
@@ -32,6 +40,7 @@ import { HeroesState } from '../../../../shared/store/heroes-state/heroes-state'
   ],
   templateUrl: './heroes-list.html',
   styleUrl: './heroes-list.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroesList {
   private readonly heroesState = inject(HeroesState);
@@ -51,7 +60,6 @@ export class HeroesList {
     ),
     { initialValue: this.filterControl.value },
   );
-  
 
   public readonly pageIndex = signal(0);
   public readonly pageSize = signal(5);

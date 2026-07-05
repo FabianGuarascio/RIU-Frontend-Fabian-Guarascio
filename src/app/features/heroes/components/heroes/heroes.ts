@@ -1,8 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { HeroesState } from '../../../../shared/store/heroes-state/heroes-state';
-
 
 @Component({
   selector: 'app-heroes',
@@ -14,6 +13,7 @@ import { HeroesState } from '../../../../shared/store/heroes-state/heroes-state'
     <router-outlet />
   `,
   styles: ``,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Heroes {
   private readonly heroesState = inject(HeroesState);

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,11 +21,12 @@ import { ThemeService } from '../../services/theme-service/theme-service';
   ],
   templateUrl: './header.html',
   styleUrl: './header.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Header {
   private readonly breakpointObserver = inject(BreakpointObserver);
-  protected readonly themeService = inject(ThemeService);
-  isDark = this.themeService.isDark
+  public readonly themeService = inject(ThemeService);
+  isDark = this.themeService.isDark;
   DESKTOP_QUERY = '(min-width: 1024px)';
 
   isDesktop = toSignal(
@@ -33,7 +34,7 @@ export class Header {
     { initialValue: this.breakpointObserver.isMatched(this.DESKTOP_QUERY) },
   );
 
-  toggleTheme():void{
-    this.themeService.toggle()
+  toggleTheme(): void {
+    this.themeService.toggle();
   }
 }

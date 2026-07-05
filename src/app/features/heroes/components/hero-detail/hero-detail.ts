@@ -1,4 +1,11 @@
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -17,6 +24,7 @@ import { HeroesState } from '../../../../shared/store/heroes-state/heroes-state'
   imports: [MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './hero-detail.html',
   styleUrl: './hero-detail.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroDetail {
   private readonly route = inject(ActivatedRoute);

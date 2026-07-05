@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,6 +25,7 @@ import { HeroesState } from '../../../../shared/store/heroes-state/heroes-state'
   ],
   templateUrl: './edit-hero-modal.html',
   styleUrl: './edit-hero-modal.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditHeroModal {
   private readonly fb = inject(FormBuilder);

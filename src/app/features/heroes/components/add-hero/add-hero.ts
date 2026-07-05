@@ -5,9 +5,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Router } from '@angular/router';
-import { HeroApi } from '../../../../shared/API/hero-api/hero-api';
 import { UppercaseName } from '../../../../shared/directives/uppercase-name/uppercase-name';
 import { HeroOrigin, NewHero } from '../../../../shared/models/hero.model';
+import { HeroesState } from '../../../../shared/store/heroes-state/heroes-state';
 
 @Component({
   selector: 'app-add-hero',
@@ -24,9 +24,9 @@ import { HeroOrigin, NewHero } from '../../../../shared/models/hero.model';
 })
 export class AddHero {
   private readonly fb = inject(FormBuilder);
-  private readonly heroApi = inject(HeroApi);
+  private readonly heroesState = inject(HeroesState);
   private readonly router = inject(Router);
-  HERO_ORIGINS: HeroOrigin[] = [
+  private readonly HERO_ORIGINS: HeroOrigin[] = [
     'comic',
     'manga',
     'anime',
@@ -36,11 +36,11 @@ export class AddHero {
     'other',
   ];
 
-  protected readonly origins = this.HERO_ORIGINS;
-  protected readonly saving = signal(false);
-  protected readonly errorMessage = signal<string | null>(null);
+  public readonly origins = this.HERO_ORIGINS;
+  public readonly saving = signal(false);
+  public readonly errorMessage = signal<string | null>(null);
 
-  protected readonly form = this.fb.nonNullable.group({
+  public readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     secretIdentity: [''],
     age: [0, [Validators.required, Validators.min(0)]],
@@ -54,7 +54,7 @@ export class AddHero {
     imageUrl: [''],
   });
 
-  protected submit(): void {
+  submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -83,7 +83,7 @@ export class AddHero {
       imageUrl: value.imageUrl || undefined,
     };
 
-    this.heroApi.create(payload).subscribe({
+    this.heroesState.create(payload).subscribe({
       next: () => this.router.navigate(['/heroes']),
       error: () => {
         this.saving.set(false);
@@ -92,7 +92,7 @@ export class AddHero {
     });
   }
 
-  protected cancel(): void {
+  cancel(): void {
     this.router.navigate(['/heroes']);
   }
 }

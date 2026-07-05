@@ -7,9 +7,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { UppercaseName } from '../../../../shared/directives/uppercase-name/uppercase-name';
-import { HeroApi } from '../../../../shared/API/hero-api/hero-api';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Hero, HeroOrigin } from '../../../../shared/models/hero.model';
+import { HeroesState } from '../../../../shared/store/heroes-state/heroes-state';
 
 @Component({
   selector: 'edit-hero-modal',
@@ -28,25 +28,24 @@ import { Hero, HeroOrigin } from '../../../../shared/models/hero.model';
 })
 export class EditHeroModal {
   private readonly fb = inject(FormBuilder);
-  private readonly heroApi = inject(HeroApi);
+  private readonly heroesState = inject(HeroesState);
   private readonly dialogRef = inject(MatDialogRef<EditHeroModal, boolean>);
-  private readonly data = inject<{hero: Hero}>(MAT_DIALOG_DATA);
+  private readonly data = inject<{ hero: Hero }>(MAT_DIALOG_DATA);
+  private readonly HERO_ORIGINS: HeroOrigin[] = [
+    'comic',
+    'manga',
+    'anime',
+    'movie',
+    'tv-series',
+    'video-game',
+    'other',
+  ];
 
-  HERO_ORIGINS: HeroOrigin[] = [
-  'comic',
-  'manga',
-  'anime',
-  'movie',
-  'tv-series',
-  'video-game',
-  'other',
-];
+  public readonly origins = this.HERO_ORIGINS;
+  public readonly saving = signal(false);
+  public readonly errorMessage = signal<string | null>(null);
 
-  protected readonly origins = this.HERO_ORIGINS;
-  protected readonly saving = signal(false);
-  protected readonly errorMessage = signal<string | null>(null);
-
-  protected readonly form = this.fb.nonNullable.group({
+  public readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     secretIdentity: [''],
     age: [0, [Validators.required, Validators.min(0)]],
@@ -77,7 +76,7 @@ export class EditHeroModal {
     });
   }
 
-  protected submit(): void {
+  submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -87,7 +86,7 @@ export class EditHeroModal {
     this.errorMessage.set(null);
 
     const value = this.form.getRawValue();
-    this.heroApi
+    this.heroesState
       .update({
         id: this.data.hero.id,
         name: value.name,
@@ -116,7 +115,7 @@ export class EditHeroModal {
       });
   }
 
-  protected cancel(): void {
+  cancel(): void {
     this.dialogRef.close(false);
   }
 }

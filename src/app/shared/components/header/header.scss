@@ -1,5 +1,7 @@
 :host {
   display: block;
+  position: relative;
+  z-index: 100;
 }
 
 .drawer-overlay {

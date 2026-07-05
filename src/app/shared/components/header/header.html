@@ -1,6 +1,6 @@
 @let bgHeaderColor = isDark() ? '!bg-blue-900' : '!bg-blue-400';
 <mat-sidenav-container>
-  <mat-sidenav #drawer mode="over" class="w-64 drawer-overlay {{bgHeaderColor}}">
+  <mat-sidenav #drawer mode="over" class="w-64 max-w-full drawer-overlay {{bgHeaderColor}}">
     <div class="flex items-center justify-between p-2 pl-4">
       <span class="font-medium">Menu</span>
       <button mat-icon-button aria-label="Close navigation menu" (click)="drawer.close()">

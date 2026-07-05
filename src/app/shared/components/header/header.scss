@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+.drawer-overlay {
+  position: fixed !important;
+  top: 0;
+  bottom: 0;
+  height: 100vh;
+}
+
+:host ::ng-deep .mat-drawer-backdrop {
+  position: fixed !important;
+}

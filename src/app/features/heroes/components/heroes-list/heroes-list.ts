@@ -27,6 +27,8 @@ import { Hero } from '../../../../shared/models/hero.model';
 import { LoadingService } from '../../../../shared/services/loading-service/loading-service';
 import { HeroApi } from '../../../../shared/API/hero-api/hero-api';
 import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/confirm-dialog';
+import { EditHeroModal } from '../edit-hero-modal/edit-hero-modal';
+import { MatTooltipModule } from '@angular/material/tooltip';
 @Component({
   selector: 'heroes-list',
   imports: [
@@ -38,6 +40,7 @@ import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/conf
     MatPaginatorModule,
     MatTableModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
   ],
   templateUrl: './heroes-list.html',
   styleUrl: './heroes-list.scss',
@@ -103,7 +106,18 @@ export class HeroesList {
   }
 
   protected editHero(hero: Hero): void {
-    null;
+    const dialogRef = this.dialog.open(EditHeroModal, {
+      data: { hero },
+      width: 'min(600px, 90vw)',
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(
+        filter((saved): saved is true => saved === true),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(() => this.refresh$.next());
   }
 
   protected deleteHero(hero: Hero): void {

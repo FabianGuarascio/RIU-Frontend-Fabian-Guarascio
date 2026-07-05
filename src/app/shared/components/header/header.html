@@ -1,0 +1,66 @@
+@let bgHeaderColor = isDark() ? '!bg-blue-900' : '!bg-blue-400';
+<mat-sidenav-container>
+  <mat-sidenav #drawer mode="over" class="w-64 drawer-overlay {{bgHeaderColor}}">
+    <div class="flex items-center justify-between p-2 pl-4">
+      <span class="font-medium">Menu</span>
+      <button mat-icon-button aria-label="Close navigation menu" (click)="drawer.close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <nav class="flex flex-col gap-1 p-4 pt-0">
+      <a
+        mat-button
+        routerLink="/heroes"
+        routerLinkActive="font-semibold underline"
+        class="text-left"
+        (click)="drawer.close()"
+      >
+        Heroes
+      </a>
+      <a
+        mat-button
+        routerLink="/about"
+        routerLinkActive="font-semibold underline"
+        class="text-left"
+        (click)="drawer.close()"
+      >
+        About
+      </a>
+    </nav>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar
+      color="primary"
+      class="!grid grid-cols-[1fr_auto_1fr] items-center {{bgHeaderColor}} border-b border-gray-300"
+    >
+      <div class="flex items-center gap-2 justify-self-start">
+        @if (!isDesktop()) {
+          <button mat-icon-button aria-label="Open navigation menu" (click)="drawer.toggle()">
+            <mat-icon>menu</mat-icon>
+          </button>
+        }
+        <span>Mindata</span>
+      </div>
+
+      @if (isDesktop()) {
+        <nav class="flex justify-self-center gap-2">
+          <a mat-button routerLink="/heroes" routerLinkActive="font-semibold underline">Heroes</a>
+          <a mat-button routerLink="/about" routerLinkActive="font-semibold underline">About</a>
+        </nav>
+      } @else {
+        <span></span>
+      }
+
+      <button
+        mat-icon-button
+        [attr.aria-label]="isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+        class="justify-self-end"
+        (click)="toggleTheme()"
+      >
+        <mat-icon>{{ isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+    </mat-toolbar>
+  </mat-sidenav-content>
+</mat-sidenav-container>

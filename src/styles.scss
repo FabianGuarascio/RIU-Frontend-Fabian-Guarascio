@@ -19,6 +19,11 @@ html {
   );
 }
 
+@include mat.theme-overrides((
+  surface: light-dark(#f2f0ec, #0a1128),
+  on-surface: light-dark(#1a1b1f, #dce6ff),
+));
+
 body {
   // Default the application to a light color theme. This can be changed to
   // `dark` to enable the dark color theme, or to `light dark` to defer to the

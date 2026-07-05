@@ -1,0 +1,107 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="flex max-h-[85vh] flex-col gap-4 py-6">
+  <h2 class="px-6 text-xl font-medium">Edit hero</h2>
+
+  @if (errorMessage()) {
+    <p class="px-6 text-(--mat-sys-error)" role="alert">{{ errorMessage() }}</p>
+  }
+
+  <ng-scrollbar
+    orientation="vertical"
+    class="min-h-0 flex-1"
+    style="--scrollbar-thumb-shape: 999px; --scrollbar-track-shape: 999px; --scrollbar-container-offset: 6px"
+  >
+    <div class="grid grid-cols-1 gap-x-4 px-6 pt-2 sm:grid-cols-2">
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" appUppercaseName required />
+        @if (form.controls.name.hasError('required')) {
+          <mat-error>Name is required.</mat-error>
+        } @else if (form.controls.name.hasError('minlength')) {
+          <mat-error>Name must be at least 2 characters.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Secret identity</mat-label>
+        <input matInput formControlName="secretIdentity" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Age</mat-label>
+        <input matInput type="number" formControlName="age" required />
+        @if (form.controls.age.hasError('required')) {
+          <mat-error>Age is required.</mat-error>
+        } @else if (form.controls.age.hasError('min')) {
+          <mat-error>Age cannot be negative.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Birth date</mat-label>
+        <input matInput type="date" formControlName="birthDate" required />
+        @if (form.controls.birthDate.hasError('required')) {
+          <mat-error>Birth date is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Region</mat-label>
+        <input matInput formControlName="region" required />
+        @if (form.controls.region.hasError('required')) {
+          <mat-error>Region is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nationality</mat-label>
+        <input matInput formControlName="nationality" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Author</mat-label>
+        <input matInput formControlName="author" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Origin</mat-label>
+        <mat-select formControlName="origin" required>
+          @for (origin of origins; track origin) {
+            <mat-option [value]="origin">{{ origin }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-span-2">
+        <mat-label>Powers (comma-separated)</mat-label>
+        <input matInput formControlName="powers" placeholder="Flight, Super strength" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-span-2">
+        <mat-label>Image URL</mat-label>
+        <input matInput formControlName="imageUrl" placeholder="https://..." />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-span-2">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="3"></textarea>
+      </mat-form-field>
+    </div>
+  </ng-scrollbar>
+
+  <div class="flex flex-col gap-2 px-6 sm:flex-row sm:justify-end">
+    <button mat-button type="button" class="w-full sm:w-auto" (click)="cancel()">Cancel</button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      class="w-full sm:w-auto"
+      [disabled]="saving()"
+    >
+      @if (saving()) {
+        <mat-spinner diameter="18" />
+      } @else {
+        Save changes
+      }
+    </button>
+  </div>
+</form>

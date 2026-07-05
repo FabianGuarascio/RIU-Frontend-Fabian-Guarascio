@@ -1,0 +1,67 @@
+<div class="relative mx-auto flex max-w-3xl flex-col gap-4 p-4 sm:p-6">
+  @if (loadingService.isLoading()) {
+    <div
+      class="absolute inset-0 z-10 flex items-center justify-center bg-[var(--mat-sys-surface)]/60"
+    >
+      <mat-spinner diameter="40" />
+    </div>
+  }
+
+  @if (hero()) {
+    <div class="flex items-center justify-between">
+      <button mat-icon-button aria-label="Back to list" (click)="back()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+
+      <div class="flex gap-2">
+        <button mat-button (click)="editHero()">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+        <button mat-button color="warn" (click)="deleteHero()">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <mat-card>
+      <mat-card-header>
+        @if (hero()?.imageUrl) {
+          <img mat-card-avatar [src]="hero()?.imageUrl" [alt]="hero()?.name" class="object-cover" />
+        }
+        <mat-card-title>{{ hero()?.name }}</mat-card-title>
+        @if (hero()?.secretIdentity) {
+          <mat-card-subtitle>{{ hero()?.secretIdentity }}</mat-card-subtitle>
+        }
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div class="text-sm">Age: {{ hero()?.age }}</div>
+          <div class="text-sm">Birth date: {{ hero()?.birthDate }}</div>
+          <div class="text-sm">Region: {{ hero()?.region }}</div>
+          <div class="text-sm">Nationality: {{ hero()?.nationality }}</div>
+          <div class="text-sm">Author: {{ hero()?.author }}</div>
+          <div class="text-sm">Origin: {{ hero()?.origin }}</div>
+          @if (hero()?.powers?.length) {
+            <div class="sm:col-span-2">
+              <div class="text-sm">Powers: {{ hero()?.powers?.join(', ') }}</div>
+            </div>
+          }
+  
+          @if (hero()?.description) {
+            <div class="sm:col-span-2">
+              <div class="text-sm">Description</div>
+              <div>{{ hero()?.description }}</div>
+            </div>
+          }
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+  } @else if (errorMessage()) {
+    <p class="text-(--mat-sys-error)" role="alert">{{ errorMessage() }}</p>
+    <button mat-button class="w-fit" (click)="back()">Back to list</button>
+  }
+</div>

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
@@ -12,6 +12,7 @@ import { UppercaseName } from '../../../../shared/directives/uppercase-name/uppe
 import { HeroOrigin, NewHero } from '../../../../shared/models/hero.model';
 import { HeroesState } from '../../../../shared/store/heroes-state/heroes-state';
 import { HERO_ORIGINS } from '../../../../shared/consts/hero-origins';
+import { HeroFormService } from '../../../../shared/services/hero-form-service/hero-form-service';
 
 @Component({
   selector: 'app-add-hero',
@@ -30,38 +31,22 @@ import { HERO_ORIGINS } from '../../../../shared/consts/hero-origins';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddHero {
-  private readonly fb = inject(FormBuilder);
   private readonly heroesState = inject(HeroesState);
   private readonly router = inject(Router);
+  private readonly heroFormService = inject(HeroFormService);
   public readonly origins: readonly HeroOrigin[] = HERO_ORIGINS;
   public readonly saving = signal(false);
   public readonly errorMessage = signal<string | null>(null);
   public readonly powerSeparatorKeyCodes = [ENTER, COMMA];
 
-  public readonly form = this.fb.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    secretIdentity: [''],
-    age: [0, [Validators.required, Validators.min(0)]],
-    birthDate: ['', Validators.required],
-    region: ['', Validators.required],
-    nationality: [''],
-    author: [''],
-    origin: ['comic' as HeroOrigin, Validators.required],
-    powers: [[] as string[]],
-    description: [''],
-    imageUrl: [''],
-  });
+  public readonly form = this.heroFormService.createHeroForm();
 
   addPower(event: MatChipInputEvent): void {
-    const power = (event.value || '').trim();
-    if (power) {
-      this.form.controls.powers.setValue([...this.form.controls.powers.value, power]);
-    }
-    event.chipInput.clear();
+    this.heroFormService.addPower(this.form.controls.powers, event);
   }
 
   removePower(power: string): void {
-    this.form.controls.powers.setValue(this.form.controls.powers.value.filter((p) => p !== power));
+    this.heroFormService.removePower(this.form.controls.powers, power);
   }
 
   submit(): void {

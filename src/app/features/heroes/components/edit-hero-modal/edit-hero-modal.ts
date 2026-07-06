@@ -13,6 +13,7 @@ import { UppercaseName } from '../../../../shared/directives/uppercase-name/uppe
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Hero, HeroOrigin } from '../../../../shared/models/hero.model';
 import { HeroesState } from '../../../../shared/store/heroes-state/heroes-state';
+import { HERO_ORIGINS } from '../../../../shared/consts/hero-origins';
 
 @Component({
   selector: 'edit-hero-modal',
@@ -37,17 +38,7 @@ export class EditHeroModal {
   private readonly heroesState = inject(HeroesState);
   private readonly dialogRef = inject(MatDialogRef<EditHeroModal, boolean>);
   private readonly data = inject<{ hero: Hero }>(MAT_DIALOG_DATA);
-  private readonly HERO_ORIGINS: HeroOrigin[] = [
-    'comic',
-    'manga',
-    'anime',
-    'movie',
-    'tv-series',
-    'video-game',
-    'other',
-  ];
-
-  public readonly origins = this.HERO_ORIGINS;
+  public readonly origins: readonly HeroOrigin[] = HERO_ORIGINS;
   public readonly saving = signal(false);
   public readonly errorMessage = signal<string | null>(null);
   public readonly powerSeparatorKeyCodes = [ENTER, COMMA];
@@ -92,9 +83,7 @@ export class EditHeroModal {
   }
 
   removePower(power: string): void {
-    this.form.controls.powers.setValue(
-      this.form.controls.powers.value.filter((p) => p !== power),
-    );
+    this.form.controls.powers.setValue(this.form.controls.powers.value.filter((p) => p !== power));
   }
 
   submit(): void {

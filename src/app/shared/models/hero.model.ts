@@ -1,5 +1,6 @@
-export type HeroOrigin =
-  'comic' | 'manga' | 'anime' | 'movie' | 'tv-series' | 'video-game' | 'other';
+import { HERO_ORIGINS } from '../consts/hero-origins';
+
+export type HeroOrigin = (typeof HERO_ORIGINS)[number];
 
 export interface Hero {
   id: number;

@@ -5,12 +5,8 @@
 }
 
 .drawer-overlay {
-  position: fixed !important;
+  position: fixed;
   top: 0;
   bottom: 0;
   height: 100vh;
-}
-
-:host ::ng-deep .mat-drawer-backdrop {
-  position: fixed !important;
 }

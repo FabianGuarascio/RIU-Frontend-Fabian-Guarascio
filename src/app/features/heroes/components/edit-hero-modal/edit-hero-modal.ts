@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
@@ -14,6 +14,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Hero, HeroOrigin } from '../../../../shared/models/hero.model';
 import { HeroesState } from '../../../../shared/store/heroes-state/heroes-state';
 import { HERO_ORIGINS } from '../../../../shared/consts/hero-origins';
+import { HeroFormService } from '../../../../shared/services/hero-form-service/hero-form-service';
 
 @Component({
   selector: 'edit-hero-modal',
@@ -34,7 +35,7 @@ import { HERO_ORIGINS } from '../../../../shared/consts/hero-origins';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditHeroModal {
-  private readonly fb = inject(FormBuilder);
+  private readonly heroFormService = inject(HeroFormService);
   private readonly heroesState = inject(HeroesState);
   private readonly dialogRef = inject(MatDialogRef<EditHeroModal, boolean>);
   private readonly data = inject<{ hero: Hero }>(MAT_DIALOG_DATA);
@@ -43,19 +44,7 @@ export class EditHeroModal {
   public readonly errorMessage = signal<string | null>(null);
   public readonly powerSeparatorKeyCodes = [ENTER, COMMA];
 
-  public readonly form = this.fb.nonNullable.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    secretIdentity: [''],
-    age: [0, [Validators.required, Validators.min(0)]],
-    birthDate: ['', Validators.required],
-    region: ['', Validators.required],
-    nationality: [''],
-    author: [''],
-    origin: ['comic' as HeroOrigin, Validators.required],
-    powers: [[] as string[]],
-    description: [''],
-    imageUrl: [''],
-  });
+  public readonly form = this.heroFormService.createHeroForm();
 
   constructor() {
     const hero = this.data.hero;
@@ -75,15 +64,11 @@ export class EditHeroModal {
   }
 
   addPower(event: MatChipInputEvent): void {
-    const power = (event.value || '').trim();
-    if (power) {
-      this.form.controls.powers.setValue([...this.form.controls.powers.value, power]);
-    }
-    event.chipInput.clear();
+    this.heroFormService.addPower(this.form.controls.powers, event);
   }
 
   removePower(power: string): void {
-    this.form.controls.powers.setValue(this.form.controls.powers.value.filter((p) => p !== power));
+    this.heroFormService.removePower(this.form.controls.powers, power);
   }
 
   submit(): void {

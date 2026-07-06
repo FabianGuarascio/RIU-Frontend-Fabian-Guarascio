@@ -61,10 +61,7 @@ describe('HeroesState', () => {
   it('loadHeroes() returns the cached list without hitting the API again', () => {
     service.loadHeroes().subscribe();
     heroApi.getAll.mockClear();
-
-    let result: Hero[] | undefined;
-    service.loadHeroes().subscribe((heroes) => (result = heroes));
-
+    service.loadHeroes().subscribe();
     expect(heroApi.getAll).not.toHaveBeenCalled();
   });
 

@@ -25,7 +25,6 @@
     "material-icons": "^1.13.14",
     "ngx-scrollbar": "^19.1.5",
     "rxjs": "~7.8.0",
-    "tailwindcss": "^4.3.2",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
@@ -36,7 +35,7 @@
     "jsdom": "^28.0.0",
     "postcss": "^8.5.3",
     "prettier": "^3.8.1",
-    "tailwindcss": "^4.1.12",
+    "tailwindcss": "^4.3.2",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }

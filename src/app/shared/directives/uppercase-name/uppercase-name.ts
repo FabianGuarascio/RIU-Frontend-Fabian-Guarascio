@@ -8,16 +8,18 @@ import { NgControl } from '@angular/forms';
   },
 })
 export class UppercaseName {
- private readonly elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+  private readonly elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
   private readonly renderer = inject(Renderer2);
   private readonly ngControl = inject(NgControl, { optional: true, self: true });
 
   protected onInput(): void {
     const input = this.elementRef.nativeElement;
+    const { selectionStart, selectionEnd } = input;
     const uppercased = input.value.toUpperCase();
 
     if (input.value !== uppercased) {
       this.renderer.setProperty(input, 'value', uppercased);
+      input.setSelectionRange(selectionStart, selectionEnd);
     }
 
     this.ngControl?.control?.setValue(uppercased, { emitEvent: false });

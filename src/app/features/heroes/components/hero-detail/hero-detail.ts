@@ -6,7 +6,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,11 +34,12 @@ export class HeroDetail {
   private readonly destroyRef = inject(DestroyRef);
   public readonly loadingService = inject(LoadingService);
 
-  private readonly heroId = Number(this.route.snapshot.paramMap.get('id'));
+  private readonly paramMap = toSignal(this.route.paramMap);
+  private readonly heroId = computed(() => Number(this.paramMap()?.get('id')));
 
   private readonly actionError = signal<string | null>(null);
 
-  public readonly hero = computed(() => this.heroesState.getById(this.heroId) ?? null);
+  public readonly hero = computed(() => this.heroesState.getById(this.heroId()) ?? null);
   public readonly errorMessage = computed(() => {
     if (this.actionError()) {
       return this.actionError();

@@ -10,3 +10,8 @@
   bottom: 0;
   height: 100vh;
 }
+
+
+:host ::ng-deep .mat-drawer-backdrop {
+  position: fixed;
+}

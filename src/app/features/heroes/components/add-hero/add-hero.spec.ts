@@ -58,7 +58,7 @@ describe('AddHero', () => {
       birthDate: '1938-06-01',
       region: 'Krypton',
       origin: 'comic',
-      powers: 'flight,  strength ',
+      powers: ['flight', 'strength'],
     });
 
     component.submit();

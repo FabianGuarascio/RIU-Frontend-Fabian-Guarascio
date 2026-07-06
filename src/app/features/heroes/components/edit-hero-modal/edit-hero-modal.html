@@ -8,7 +8,11 @@
   <ng-scrollbar
     orientation="vertical"
     class="min-h-0 flex-1"
-    style="--scrollbar-thumb-shape: 999px; --scrollbar-track-shape: 999px; --scrollbar-container-offset: 6px"
+    style="
+      --scrollbar-thumb-shape: 999px;
+      --scrollbar-track-shape: 999px;
+      --scrollbar-container-offset: 6px;
+    "
   >
     <div class="grid grid-cols-1 gap-x-4 px-6 pt-2 sm:grid-cols-2">
       <mat-form-field appearance="outline">
@@ -72,8 +76,26 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="col-span-2">
-        <mat-label>Powers (comma-separated)</mat-label>
-        <input matInput formControlName="powers" placeholder="Flight, Super strength" />
+        <mat-label>Powers</mat-label>
+        <div class="flex gap-4 mb-4">
+          <mat-chip-grid #powersGrid aria-label="Powers">
+            @for (power of form.controls.powers.value; track power) {
+              <mat-chip-row (removed)="removePower(power)">
+                {{ power }}
+                <button matChipRemove [attr.aria-label]="'Remove ' + power">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            }
+          </mat-chip-grid>
+          <input
+            [placeholder]="form.controls.powers.value.length ? '' : 'Flight, Super strength'"
+            [matChipInputFor]="powersGrid"
+            [matChipInputSeparatorKeyCodes]="powerSeparatorKeyCodes"
+            (matChipInputTokenEnd)="addPower($event)"
+          />
+        </div>
+        <mat-hint>Press Enter or comma to add a power</mat-hint>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="col-span-2">

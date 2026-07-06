@@ -58,7 +58,7 @@ describe('EditHeroModal', () => {
       nationality: '',
       author: '',
       origin: 'comic',
-      powers: 'flight, strength',
+      powers: ['flight', 'strength'],
       description: '',
       imageUrl: '',
     };
@@ -74,7 +74,7 @@ describe('EditHeroModal', () => {
   it('saves the hero and closes the dialog when the form is valid', () => {
     component.form.patchValue({
       name: 'Superman II',
-      powers: 'flight,  strength , heat vision',
+      powers: ['flight', 'strength', 'heat vision'],
     });
     component.submit();
     expect(dialogRef.close).toHaveBeenCalledWith(true);

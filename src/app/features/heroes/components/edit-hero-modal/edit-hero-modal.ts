@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
@@ -16,7 +19,9 @@ import { HeroesState } from '../../../../shared/store/heroes-state/heroes-state'
   imports: [
     ReactiveFormsModule,
     MatButtonModule,
+    MatChipsModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
     MatProgressSpinnerModule,
     MatSelectModule,
@@ -45,6 +50,7 @@ export class EditHeroModal {
   public readonly origins = this.HERO_ORIGINS;
   public readonly saving = signal(false);
   public readonly errorMessage = signal<string | null>(null);
+  public readonly powerSeparatorKeyCodes = [ENTER, COMMA];
 
   public readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
@@ -55,7 +61,7 @@ export class EditHeroModal {
     nationality: [''],
     author: [''],
     origin: ['comic' as HeroOrigin, Validators.required],
-    powers: [''],
+    powers: [[] as string[]],
     description: [''],
     imageUrl: [''],
   });
@@ -71,10 +77,24 @@ export class EditHeroModal {
       nationality: hero.nationality ?? '',
       author: hero.author ?? '',
       origin: hero.origin,
-      powers: hero.powers.join(', '),
+      powers: hero.powers,
       description: hero.description ?? '',
       imageUrl: hero.imageUrl ?? '',
     });
+  }
+
+  addPower(event: MatChipInputEvent): void {
+    const power = (event.value || '').trim();
+    if (power) {
+      this.form.controls.powers.setValue([...this.form.controls.powers.value, power]);
+    }
+    event.chipInput.clear();
+  }
+
+  removePower(power: string): void {
+    this.form.controls.powers.setValue(
+      this.form.controls.powers.value.filter((p) => p !== power),
+    );
   }
 
   submit(): void {
@@ -98,12 +118,7 @@ export class EditHeroModal {
         nationality: value.nationality || undefined,
         author: value.author || undefined,
         origin: value.origin,
-        powers: value.powers
-          ? value.powers
-              .split(',')
-              .map((power) => power.trim())
-              .filter(Boolean)
-          : [],
+        powers: value.powers,
         description: value.description || undefined,
         imageUrl: value.imageUrl || undefined,
       })
